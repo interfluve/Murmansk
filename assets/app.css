@@ -1,0 +1,17 @@
+.temperature{
+    font-size: 25vw;
+    font-weight: 600;
+    color: #363636;
+    line-height: 1.125;
+}
+
+.title{
+    font-size: 4vw;
+}
+.subtitle{
+    font-size: 3vw;
+}
+.celsius{
+    font-size: 6vw;
+}
+
