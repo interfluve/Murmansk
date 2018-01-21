@@ -7,7 +7,7 @@ function requestData() {
         type: 'GET',
         url: tSrc,
         dataType: 'json',
-        timeout: 300,
+        timeout: 2000,
         success: function(rawData){
             updateData(rawData);
         },
