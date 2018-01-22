@@ -29,6 +29,16 @@ function updateData(rawData) {
 
     var time = moment.unix(rawData.time).fromNow();
 
+    var arrow = $('.arrow');
+    if (rawData.direction < 0) {
+        arrow.addClass('color-cold');
+        arrow.text('↓');
+    }
+    else if (rawData.direction > 0) {
+        arrow.addClass('color-worm');
+        arrow.text('↑');
+    }
+
     document.title = t + '°C';
     $("#t").text(t);
     $("#time").text(time);
