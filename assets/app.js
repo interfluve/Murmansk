@@ -1,6 +1,6 @@
 moment.locale('ru');
 
-var tSrc = 'https://raw.githubusercontent.com/interfluve/Sensor-Data/master/temperature.json';
+var tSrc = 'https://raw.githubusercontent.com/interfluve/Sensor-Data/master/temperature_now.json';
 
 function requestData() {
     $.ajax({
