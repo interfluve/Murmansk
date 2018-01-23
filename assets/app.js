@@ -39,8 +39,8 @@ function request24Data() {
 request24Data();
 
 function buildChart(data) {
-    chartLabels = [];
-    chartData   = [];
+    var chartLabels = [];
+    var chartData   = [];
 
     var i = 0;
     data.forEach(function(item) {
@@ -51,14 +51,19 @@ function buildChart(data) {
         chartData.push(item.t.toFixed(2));
     });
 
+    var lineColor = '#baddff';
+    if (data[data.length-1].t > 0){
+        lineColor = '#ffb991';
+    }
+
     var ctx = $('#tChart');
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: chartLabels,
             datasets: [{
-                backgroundColor: '#baddff',
-                borderColor: '#baddff',
+                backgroundColor: lineColor,
+                borderColor: lineColor,
                 label: "Температура",
                 data: chartData,
                 fill: false,
@@ -74,6 +79,7 @@ function buildChart(data) {
                 intersect: true,
                 animationDuration: 0
             },
+
             animation: {duration: 0},
             responsiveAnimationDuration: 0,
             onResize: function(instance, size) {
@@ -91,12 +97,14 @@ function buildChart(data) {
             //     }
             // },
             tooltips: {
+                mode: 'index',
+                intersect: false,
                 callbacks: {
                     title: function(tooltipItems, data) {
                         return tooltipItems[0].xLabel.calendar();
                     },
                     label: function(tooltipItems, data) {
-                        return ' ' + tooltipItems.yLabel + ' ℃';
+                        return ' ' + tooltipItems.yLabel + ' °C';
                     }
                 }
             },
