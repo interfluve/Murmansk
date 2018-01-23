@@ -116,8 +116,12 @@ function buildChart(data) {
                         displayFormats: {
                             year: 'dddd'
                         }
-                    }
-                }]
+                    },
+                    display: false
+                }],
+                yAxes: [{
+                    display: false
+                }],
             }
         }
     });
