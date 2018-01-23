@@ -1,11 +1,12 @@
 moment.locale('ru');
 
-var tSrc = 'https://raw.githubusercontent.com/interfluve/Sensor-Data/master/temperature_now.json';
+var tNowSrc = 'https://raw.githubusercontent.com/interfluve/Sensor-Data/master/temperature_now.json';
+var t24Src  = 'https://raw.githubusercontent.com/interfluve/Sensor-Data/master/temperature_24.json';
 
-function requestData() {
+function requestNowData() {
     $.ajax({
         type: 'GET',
-        url: tSrc,
+        url: tNowSrc,
         dataType: 'json',
         timeout: 2000,
         success: function(rawData){
@@ -16,9 +17,104 @@ function requestData() {
         }
     });
 
-    setTimeout(requestData, 120000);    //2 seconds loop
-
+    setTimeout(requestNowData, 120000);    //2 seconds loop
 }
+requestNowData();
+
+function request24Data() {
+    $.ajax({
+        type: 'GET',
+        url: t24Src,
+        dataType: 'json',
+        timeout: 2000,
+        success: function(rawData){
+            buildChart(rawData)
+        },
+        error: function(xhr, type){
+            console.log('Ajax error!');
+        }
+    });
+}
+
+request24Data();
+
+function buildChart(data) {
+    chartLabels = [];
+    chartData   = [];
+
+    var i = 0;
+    data.forEach(function(item) {
+        if (i++ % 2) {
+            return;
+        }
+        chartLabels.push(moment.unix(item.time));
+        chartData.push(item.t.toFixed(2));
+    });
+
+    var ctx = $('#tChart');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: chartLabels,
+            datasets: [{
+                backgroundColor: '#baddff',
+                borderColor: '#baddff',
+                label: "Температура",
+                data: chartData,
+                fill: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display: false,
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true,
+                animationDuration: 0
+            },
+            animation: {duration: 0},
+            responsiveAnimationDuration: 0,
+            onResize: function(instance, size) {
+                console.log(size);
+            },
+            // plugins: {
+            //     datalabels: {
+            //         backgroundColor: function(context) {
+            //             return context.dataset.backgroundColor;
+            //         },
+            //         borderRadius: 4,
+            //         font: {
+            //             weight: 'bold'
+            //         }
+            //     }
+            // },
+            tooltips: {
+                callbacks: {
+                    title: function(tooltipItems, data) {
+                        return tooltipItems[0].xLabel.calendar();
+                    },
+                    label: function(tooltipItems, data) {
+                        return ' ' + tooltipItems.yLabel + ' ℃';
+                    }
+                }
+            },
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    distribution: 'series',
+                    time: {
+                        displayFormats: {
+                            year: 'dddd'
+                        }
+                    }
+                }]
+            }
+        }
+    });
+}
+
 
 function updateData(rawData) {
     var t = rawData.t.toFixed(2);
@@ -44,4 +140,5 @@ function updateData(rawData) {
     $("#time").text(time);
 }
 
-requestData();
+
+
