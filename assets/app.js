@@ -131,7 +131,7 @@ function buildChart(data) {
 function updateData(rawData) {
     var t = rawData.t.toFixed(2);
     if (t > 0) {
-        t = '+' + 1;
+        t = '+' + t;
         $("#favicon").attr("href","img/faviconPositive.ico");
     }
 
