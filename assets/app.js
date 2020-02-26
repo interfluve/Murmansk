@@ -48,11 +48,11 @@ function buildChart(data) {
             return;
         }
         chartLabels.push(moment.unix(item.time));
-        chartData.push(item.t.toFixed(2));
+        chartData.push(item.w1_t.toFixed(2));
     });
 
     var lineColor = '#baddff';
-    if (data[data.length-1].t > 0){
+    if (data[data.length-1].w1_t > 0){
         lineColor = '#ffb991';
     }
 
@@ -129,7 +129,7 @@ function buildChart(data) {
 
 
 function updateData(rawData) {
-    var t = rawData.t.toFixed(2);
+    var t = rawData.w1_t.toFixed(2);
     if (t > 0) {
         t = '+' + t;
         $("#favicon").attr("href","img/faviconPositive.ico");
@@ -138,11 +138,11 @@ function updateData(rawData) {
     var time = moment.unix(rawData.time).fromNow();
 
     var arrow = $('.arrow');
-    if (rawData.direction < 0) {
+    if (rawData.temp_direction < 0) {
         arrow.addClass('color-cold');
         arrow.text('↓');
     }
-    else if (rawData.direction > 0) {
+    else if (rawData.temp_direction > 0) {
         arrow.addClass('color-worm');
         arrow.text('↑');
     }
