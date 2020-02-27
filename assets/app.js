@@ -40,7 +40,9 @@ request24Data();
 
 function buildChart(data) {
     var chartLabels = [];
-    var chartData   = [];
+    var chartData_w1_t      = [];
+    var chartData_bme280_t  = [];
+    var chartData_fc_t      = [];
 
     var i = 0;
     data.forEach(function(item) {
@@ -48,12 +50,18 @@ function buildChart(data) {
             return;
         }
         chartLabels.push(moment.unix(item.time));
-        chartData.push(item.w1_t.toFixed(2));
+        chartData_w1_t.push(item.w1_t.toFixed(2));
+        chartData_bme280_t.push(item.bme280_t.toFixed(2));
+        chartData_fc_t.push(item.fc_t.toFixed(2));
     });
 
-    var lineColor = '#baddff';
+    var lineColor_w1_t = '#81BEFF';
+    var lineColor_bme280_t = '#76ADE7';
+    var lineColor_fc_t = '#5B98DA';
     if (data[data.length-1].w1_t > 0){
-        lineColor = '#ffb991';
+        lineColor_w1_t = '#FFD59D';
+        lineColor_bme280_t = '#FFBF9D';
+        lineColor_fc_t = '#FF9E9D';
     }
 
     var ctx = $('#tChart');
@@ -61,13 +69,29 @@ function buildChart(data) {
         type: 'line',
         data: {
             labels: chartLabels,
-            datasets: [{
-                backgroundColor: lineColor,
-                borderColor: lineColor,
-                label: "Температура",
-                data: chartData,
-                fill: false,
-            }]
+            datasets: [
+                {
+                    backgroundColor: lineColor_w1_t,
+                    borderColor: lineColor_w1_t,
+                    label: "Сенсор w1:",
+                    data: chartData_w1_t,
+                    fill: false,
+                },
+                {
+                    backgroundColor: lineColor_bme280_t,
+                    borderColor: lineColor_bme280_t,
+                    label: "Сенсор bme280:",
+                    data: chartData_bme280_t,
+                    fill: false,
+                },
+                {
+                    backgroundColor: lineColor_fc_t,
+                    borderColor: lineColor_fc_t,
+                    label: "Онлайн:",
+                    data: chartData_fc_t,
+                    fill: false,
+                }
+            ]
         },
         options: {
             responsive: true,
@@ -85,26 +109,18 @@ function buildChart(data) {
             onResize: function(instance, size) {
                 console.log(size);
             },
-            // plugins: {
-            //     datalabels: {
-            //         backgroundColor: function(context) {
-            //             return context.dataset.backgroundColor;
-            //         },
-            //         borderRadius: 4,
-            //         font: {
-            //             weight: 'bold'
-            //         }
-            //     }
-            // },
             tooltips: {
                 mode: 'index',
                 intersect: false,
                 callbacks: {
                     title: function(tooltipItems, data) {
-                        return tooltipItems[0].xLabel.calendar();
+                        console.log(tooltipItems)
+                        return tooltipItems[0].xLabel;
                     },
                     label: function(tooltipItems, data) {
-                        return ' ' + tooltipItems.yLabel + ' °C';
+                        var label = data.datasets[tooltipItems.datasetIndex].label || '';
+                        var plus = tooltipItems.yLabel > 0 ? '+':'';
+                        return label + ' ' + plus + tooltipItems.yLabel + ' °C';
                     }
                 }
             },
